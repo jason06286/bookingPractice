@@ -1,4 +1,12 @@
 .bg-cover{
     background-size: cover;
     background-position: center center;
+    transition:all 0.6s;
+}
+.bg-cover:hover{
+    transform: scale(1.1);
+}
+.bg-top{
+    background-size: cover;
+    background-position: top center;
 }
