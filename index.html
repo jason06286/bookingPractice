@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
     rel="stylesheet">
     <link rel="stylesheet" href="css/all.css">
@@ -45,10 +46,7 @@
                             arrow_drop_down
                         </span>
                     </a>
-                    <div class="dropdown-menu w-100 " aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item " href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                    <div class="dropdown-menu w-100 roomName" aria-labelledby="dropdownMenuLink">
                     </div>
                 </div>
             </div>
@@ -104,10 +102,8 @@
                                 arrow_drop_down
                             </span>
                         </a>
-                        <div class="dropdown-menu w-100 " aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item " href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                        <div class="dropdown-menu w-100 roomName" aria-labelledby="dropdownMenuLink">
+                            
                         </div>
                     </div>
                     <a href="reserve,html" class="btn btn-info btn-lg w-100 h-100 rounded-0 d-flex align-items-center justify-content-center">RESERVE NOW</a>
@@ -119,42 +115,10 @@
         <div class="container">
             <h2>Recommend</h2>
             <p>You may be interested in our popular rooms</p>
-            <div class="row">
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-header bg-cover bg-item1">
-
-                        </div>
-                        <div class="card-body text-right">
-                            <h4>Twin Room</h4>
-                            <p class="mb-0">$3,350 NTD / night</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-header bg-cover bg-item2">
-
-                        </div>
-                        <div class="card-body text-right">
-                            <h4>Double Room</h4>
-                            <p class="mb-0">$2,460 NTD / night</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-header bg-cover bg-item3">
-
-                        </div>
-                        <div class="card-body text-right">
-                            <h4>Deluxe Single Room</h4>
-                            <p class="mb-0">$1,899 NTD / night</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
+        <div class="swiper-container">
+            <div class="swiper-wrapper roomSwiper"></div>
+        </div>   
     </section>
     <section class="mb-6">
         <div class="bg-cover bg-item4">
@@ -170,90 +134,22 @@
     </section>
     <section>
         <div class="container">
-            <div class="row mb-6">
+            <div class="row mb-6 single">
                 <div class="col-4">
                     <h2>One person</h2>
                     <p>Enjoy the one and only service</p>
                 </div>
-                <div class="col-4">
-                    <a href="#" class="text-decoration-none">
-                        <div class="card">
-                            <div class="card-header bg-cover bg-item3">
-    
-                            </div>
-                            <div class="card-body text-right">
-                                <h4>Single Room</h4>
-                                <p class="mb-0">$1,380 NTD / night</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-header bg-cover bg-item5">
-
-                        </div>
-                        <div class="card-body text-right">
-                            <h4>Deluxe Single Room</h4>
-                            <p class="mb-0">$1,899 NTD / night</p>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div class="row mb-6">
+            <div class="row mb-6 double">
                 <div class="col-4">
                     <h2>Two people</h2>
                     <p>The perfect choice for both of you</p>
                 </div>
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-header bg-cover bg-item2">
-
-                        </div>
-                        <div class="card-body text-right">
-                            <h4>Double Room</h4>
-                            <p class="mb-0">$2,460 NTD / night</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-header bg-cover bg-item6">
-
-                        </div>
-                        <div class="card-body text-right">
-                            <h4>Deluxe Double Room</h4>
-                            <p class="mb-0">$2,888 NTD / night</p>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div class="row mb-6">
+            <div class="row mb-6 twin">
                 <div class="col-4">
                     <h2>Family</h2>
                     <p>Wanna a big room? there you are</p>
-                </div>
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-header bg-cover bg-item1">
-
-                        </div>
-                        <div class="card-body text-right">
-                            <h4>Twin Room</h4>
-                            <p class="mb-0">$3,350 NTD / night</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-header bg-cover bg-item5">
-
-                        </div>
-                        <div class="card-body text-right">
-                            <h4>Deluxe Twin Room</h4>
-                            <p class="mb-0">$3,899 NTD / night</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -265,13 +161,13 @@
         <div class="container">
             <p>© 2019 HexHotel. All rights reserved.</p>
         </div>
+    
     </footer>
-
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-    <script src="js/all.json"></script>
     <script src="js/all.js"></script>
 </body>
 
