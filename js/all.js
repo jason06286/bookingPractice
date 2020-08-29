@@ -18,7 +18,6 @@ let booking = {
 
 getData()
 navBar()
-mouseOver()
 
 
 function getData(params) {
@@ -99,13 +98,7 @@ function swiper(params) {
 	});
 }
 
-// mouse over
-mouseOver()
-function mouseOver(params) {
-	mouse.forEach((item,index)=>{
-		console.log(item,index)
-	})
-}
+
 
 // render
 
@@ -235,6 +228,46 @@ function offerService(){
 
 
 let today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+$('.date1').daterangepicker({
+    
+    "locale": {
+        "format": "MM/DD/YYYY",
+        "separator": " - ",
+        "applyLabel": "Apply",
+        "cancelLabel": "Cancel",
+        "fromLabel": "From",
+        "toLabel": "To",
+        "customRangeLabel": "Custom",
+        "weekLabel": "W",
+        "daysOfWeek": [
+            "Su",
+            "Mo",
+            "Tu",
+            "We",
+            "Th",
+            "Fr",
+            "Sa"
+        ],
+        "monthNames": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ],
+        "firstDay": 0
+    },
+    "alwaysShowCalendars": true,
+    "startDate": today,
+    "endDate": "12/31/2020"
+})
 $('.date').daterangepicker({
     
     "locale": {
@@ -371,55 +404,76 @@ getDatesBetween(start,end)
 		}
 		console.log(reservationInfo)
 		console.log(JSON.stringify(reservationInfo))
+		localStorage.setItem('data',JSON.stringify(booking))
 		axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 		axios.post(`${postUrl}${singleRoomData[0].id}`,reservationInfo)
 		.then(function (res) {
-			console.log(res)	
-			successful(booking)
+			console.log(res)
+		    window.location.pathname='/success.html'	
+			successful()
 			console.log(booking)
 			
 		})
 		.catch(err=>console.log(err	))
 	}
-	
-	function successful(booking) {
-		console.log(booking)
+	if(window.location.pathname.match('/success.html')){
+		successful()
+	}
+	function successful() {
+		axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+		axios.get(`${url}rooms`)
+		.then(
+			function (res) {
+				let data=res.data.items
+				roomData.push(...data)
+				console.log(roomData)
+				navput()
+			}
+		).catch(function (err) {
+			console.log(err)
+		})
+		let data=localStorage.getItem('data')
+		console.log(data)
+		let person=JSON.parse(data)
+		console.log(person)
 		const success=document.querySelector('.success')
-	let str=`<div class="modal show" tabindex="-1"id="exampleModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-			<h2 class="modal-title text-secondary"> Reservation <br>
-			Received!</h2>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-			</div>
-			<div class="modal-body">
-			<div class=" border-bottom-0 py-3">
-					<h6 class=" d-flex">Guest <span class="ml-6">${booking.name}</span></h6>
-				</div>
-				<div class=" border-bottom-0 py-3">
-					<h6 class=" d-flex">Phone <span class="ml-6">${booking.phone}</span></h6>
-				</div>
-				<div class=" border-bottom-0 py-3">
-					<h6 class=" d-flex">Room <span class="ml-6">${booking.room}/${booking.nights}Nights</span></h6>
-				</div>
-				<div class=" border-bottom-0 py-3">
-					<h6 class=" d-flex">Check-in <span class="ml-6">${booking.startDate}</span></h6>
-				</div>
-				<div class=" border-bottom-0 py-3">
-					<h6 class=" d-flex">Check-out <span class="ml-6">${booking.endDate}</span></h6>
-				</div>
-			</div>
-			<div class="modal-footer">
-			<a href="#" class="btn btn-primary" data-dismiss="modal">EDIT RESERVATION</a>
-            <a href="index.html" class="btn btn-info ">HOMEPAGE</a>
-			</div>
-		</div>
-		</div>
-	</div>`
+		console.log(success)
+	let str=`<table class="table text-center" >
+	<thead>
+		<tr>
+			<th scope="col-6">Guest</th>
+			<td scope="col-6">${person.name}</th>
+			
+		</tr>
+	</thead>
+		<tbody>
+		<tr>
+			<th scope="row">Phone </th>
+			<td>${person.phone}</td>
+		</tr>
+		<tr>
+			<th scope="row">Room</th>
+			<td>${person.room}/${person.nights}Nights</td>
+		</tr>
+		<tr>
+			<th scope="row">Check-in</th>
+			<td>${person.startDate}</td>
+		</tr>
+		<tr>
+			<th scope="row">Check-out </th>
+			<td>${person.endDate}</td>
+		</tr>
+		</tbody>
+</table>`
 	success.innerHTML=str
+	}
+	function navput(params) {
+		const  roomSuccess=document.querySelector('.roomSuccess')
+		roomData.forEach(function (item) {
+			let dropStr=`<a class="dropdown-item " href="room.html?${item.id}">${item.name}</a>`
+			roomSuccess.innerHTML+=dropStr
+		})
+		
 	}
 	axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 	axios.delete('https://challenge.thef2e.com/api/thef2e2019/stage6/rooms')
