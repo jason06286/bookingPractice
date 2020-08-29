@@ -2,15 +2,28 @@ const token='41gSRV92b2mpXiDBb7ulDKRpk4KUE9bChnnIKgMPExVhza4ovF7ubibWvPB5'
 const url='https://challenge.thef2e.com/api/thef2e2019/stage6/'
 const mouseChange=document.querySelector('.mouseChange')
 const mouse=document.querySelectorAll('.mouse')
+const reserve=document.querySelector('.reserve')
+const finalReserve=document.querySelector('.finalReserve')
 const roomData=[]
 const singleRoomData=[]
+let booking = {
+	name: "",
+	phone: "",
+	startDate: "",
+	endDate: "",
+	dates: [],
+	nights: 0,
+	room:""
+}
+
 getData()
 navBar()
 mouseOver()
 
+
 function getData(params) {
 	let path=window.location.pathname
-	if(path!='/room.html'){
+	if(path.match('/index.html')){
 		axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 		axios.get(`${url}rooms`)
 		.then(
@@ -36,6 +49,19 @@ function getData(params) {
 				console.log(singleRoomData)
 				roomRender()
 			}).catch(function (err) { console.log(err) })
+	}else if(path.match('/reserve.html')){
+		let id= window.location.search.split('?').pop()
+			axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+			axios.get(`${url}room/${id}`)
+			.then(function (res) {
+				console.log(res)
+				let data=res.data.room
+				singleRoomData.push(...data)
+				console.log(singleRoomData)
+		        booking.room=singleRoomData[0].name
+				finalreserve()
+				finalReserve.addEventListener('click',final)
+			}).catch(function (err) { console.log(err) })
 	}
 }
 function getRoomData(params) {
@@ -46,6 +72,7 @@ function getRoomData(params) {
 				let data=res.data.items
 				roomData.push(...data)
 				console.log(roomData)
+				
 			}
 		).catch(function (err) {
 			console.log(err)
@@ -155,6 +182,11 @@ function roomRender(param) {
 	const bannerPic=document.querySelector('.bannerPic')
 	const bannerText=document.querySelector('.bannerText')
 	const singleText=document.querySelector('.singleText')
+	const reserveRoom=document.querySelector('.reserveRoom')
+	roomData.forEach(function (item) {
+		let dropStr=`<a class="dropdown-item " href="room.html?${item.id}">${item.name}</a>`
+		roomName.innerHTML+=dropStr
+	})
 	singleRoomData.forEach(function (item) {
 		let picStr=`<div class="bg-cover mouseChange" style="height: 480px;background-image: url(${item.imageUrl[0]});">
 		<h1 class="title text-secondary m-0 bg-white py-2">${item.name}</h1>
@@ -177,11 +209,9 @@ function roomRender(param) {
 		bannerPic.innerHTML+=picStr
 		bannerText.innerHTML+=textStr
 		singleText.innerHTML+=singleStr
+		reserveRoom.setAttribute('href',`reserve.html?${item.id}`)
 		offerService()
-		roomData.forEach(function (item) {
-			let dropStr=`<a class="dropdown-item " href="room.html?${item.id}">${item.name}</a>`
-			roomName.innerHTML+=dropStr
-		})
+		
 	})
 	
 }
@@ -198,3 +228,220 @@ function offerService(){
         }
     });
 };
+
+
+// date
+
+
+
+let today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+$('.date').daterangepicker({
+    
+    "locale": {
+        "format": "MM/DD/YYYY",
+        "separator": " - ",
+        "applyLabel": "Apply",
+        "cancelLabel": "Cancel",
+        "fromLabel": "From",
+        "toLabel": "To",
+        "customRangeLabel": "Custom",
+        "weekLabel": "W",
+        "daysOfWeek": [
+            "Su",
+            "Mo",
+            "Tu",
+            "We",
+            "Th",
+            "Fr",
+            "Sa"
+        ],
+        "monthNames": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ],
+        "firstDay": 0
+    },
+    "alwaysShowCalendars": true,
+    "startDate": today,
+    "endDate": "12/31/2020"
+}, function(start, end, label) {
+console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+getDatesBetween(start,end)
+});
+    const getDatesBetween = (startDate, endDate) => {
+        let reserveDayData=[]
+        let result=[]
+        let currentDate = startDate
+        let holiday=0
+        let weekday=0
+        console.log(startDate,endDate)
+        while(currentDate < endDate){ //dont count the last day (checkout day)
+            reserveDayData.push(new Date(currentDate))
+            result.push(new Date(currentDate+ 8 * 3600 * 1000).toISOString().split("T")[0])
+            currentDate = moment(currentDate).add(1, 'days');
+        }
+        console.log(reserveDayData)
+		console.log(result)
+		reserveDayData.pop()
+        reserveDayData.forEach(function (item) {
+            if(item.getDay()===0 ||item.getDay()===6){
+                    return holiday+=1
+            }else{
+                    return weekday+=1
+            }
+		})
+		booking.dates=result 
+		booking.nights=holiday+weekday
+		booking.startDate=result[0]
+		booking.endDate=result[result.length-1]
+        console.log(holiday)  
+		console.log(weekday)
+		total(weekday,holiday)
+		
+	}
+	function total(weekday,holiday) {
+		console.log(weekday)
+		console.log(holiday)
+		const total =document.querySelector('.total')
+		let weekPrice=singleRoomData[0].normalDayPrice*weekday
+		let holidayPrice=singleRoomData[0].holidayPrice*holiday
+		let charge=Math.round((weekPrice+holidayPrice)*0.1) 
+		let all=weekPrice+holidayPrice+charge
+		let str=`<div class="card">
+		<div class="card-body">
+			<div class="d-flex justify-content-between  ">
+				<span>平日：${singleRoomData[0].normalDayPrice}元 × ${weekday} night</span>
+				<span>$${weekPrice}</span>
+			</div>
+			<div class="d-flex justify-content-between  ">
+				<span>假日：${singleRoomData[0].holidayPrice}元 × ${holiday} night</span>
+				<span>$${holidayPrice}</span>
+			</div>
+			<div class="d-flex justify-content-between  ">
+				<span >Service Fee</span>
+				<span >$${charge}</span>
+			</div>
+		</div>
+		<div class="card-footer">
+			<div class="d-flex justify-content-between">
+				<span class="h4">TOTAL</span>
+				<span class="h4">$${all}</span>
+			</div>
+		</div>
+	</div>`
+	total.innerHTML=str
+	}
+
+	function finalreserve(params) {
+		const checkRoom=document.querySelector('.checkRoom')
+		let str=`<div class="card">
+		<div class="card-img-top" >
+		<img src="${singleRoomData[0].imageUrl[0]}" alt="" style="height: 204px;" class="w-100">
+		</div>
+		<div class="card-header">
+			<h5 class="text-secondary text-center">${singleRoomData[0].name}</h5>
+		</div>
+	</div>`
+	checkRoom.innerHTML=str
+	}
+
+    function final(params) {
+		const name=document.querySelector('#account').value
+		const phone=document.querySelector('#phone').value
+		const reservationInfo ={}
+		let postUrl='https://challenge.thef2e.com/api/thef2e2019/stage6/room/'
+		if (name === ''||phone===''|| booking.dates.length===0){
+			alert('資料未填寫完全')
+		}else if(name !== ''&&phone!==''&& booking.dates.length>0){
+			booking.name=name
+			booking.phone=phone
+			reservationInfo.name=booking.name
+			reservationInfo.tel=booking.phone
+			reservationInfo.date=booking.dates
+		}
+		console.log(reservationInfo)
+		console.log(JSON.stringify(reservationInfo))
+		axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+		axios.post(`${postUrl}${singleRoomData[0].id}`,reservationInfo)
+		.then(function (res) {
+			console.log(res)	
+			successful(booking)
+			console.log(booking)
+			
+		})
+		.catch(err=>console.log(err	))
+	}
+	
+	function successful(booking) {
+		console.log(booking)
+		const success=document.querySelector('.success')
+	let str=`<div class="modal show" tabindex="-1"id="exampleModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<h2 class="modal-title text-secondary"> Reservation <br>
+			Received!</h2>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			</div>
+			<div class="modal-body">
+			<div class=" border-bottom-0 py-3">
+					<h6 class=" d-flex">Guest <span class="ml-6">${booking.name}</span></h6>
+				</div>
+				<div class=" border-bottom-0 py-3">
+					<h6 class=" d-flex">Phone <span class="ml-6">${booking.phone}</span></h6>
+				</div>
+				<div class=" border-bottom-0 py-3">
+					<h6 class=" d-flex">Room <span class="ml-6">${booking.room}/${booking.nights}Nights</span></h6>
+				</div>
+				<div class=" border-bottom-0 py-3">
+					<h6 class=" d-flex">Check-in <span class="ml-6">${booking.startDate}</span></h6>
+				</div>
+				<div class=" border-bottom-0 py-3">
+					<h6 class=" d-flex">Check-out <span class="ml-6">${booking.endDate}</span></h6>
+				</div>
+			</div>
+			<div class="modal-footer">
+			<a href="#" class="btn btn-primary" data-dismiss="modal">EDIT RESERVATION</a>
+            <a href="index.html" class="btn btn-info ">HOMEPAGE</a>
+			</div>
+		</div>
+		</div>
+	</div>`
+	success.innerHTML=str
+	}
+	axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+	axios.delete('https://challenge.thef2e.com/api/thef2e2019/stage6/rooms')
+	.then(function (res) {
+		console.log(res)	
+		
+		
+	})
+	.catch(err=>console.log(err	))
+
+	
+    
+    
+    
+    
+
+    
+
+
+    
+    
+    
+    
+
+    
