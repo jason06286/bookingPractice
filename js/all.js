@@ -409,7 +409,7 @@ getDatesBetween(start,end)
 		axios.post(`${postUrl}${singleRoomData[0].id}`,reservationInfo)
 		.then(function (res) {
 			console.log(res)
-		    window.location.pathname='/success.html'	
+		    window.location.pathname='/bookingPractice/success.html'	
 			successful()
 			console.log(booking)
 			
