@@ -19,7 +19,7 @@ let booking = {
 getData()
 navBar()
 
-
+// getData
 function getData(params) {
 	let path=window.location.pathname
 	if(path.match('/index.html')){
@@ -77,6 +77,7 @@ function getRoomData(params) {
 			console.log(err)
 		})
 }
+
 // navBar 滾動
 function navBar (){
     let nav=document.querySelector('nav')
@@ -99,9 +100,7 @@ function swiper(params) {
 }
 
 
-
 // render
-
 function indexrender(params) {
 	const roomName=document.querySelectorAll('.roomName')
 	const roomSwiper=document.querySelector('.roomSwiper')
@@ -224,9 +223,6 @@ function offerService(){
 
 
 // date
-
-
-
 let today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 $('.date1').daterangepicker({
     
@@ -311,6 +307,9 @@ $('.date').daterangepicker({
 console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
 getDatesBetween(start,end)
 });
+
+
+//日期範圍
     const getDatesBetween = (startDate, endDate) => {
         let reserveDayData=[]
         let result=[]
@@ -342,6 +341,9 @@ getDatesBetween(start,end)
 		total(weekday,holiday)
 		
 	}
+
+
+	// 房價價格
 	function total(weekday,holiday) {
 		console.log(weekday)
 		console.log(holiday)
@@ -375,6 +377,8 @@ getDatesBetween(start,end)
 	total.innerHTML=str
 	}
 
+
+	// reserve
 	function finalreserve(params) {
 		const checkRoom=document.querySelector('.checkRoom')
 		let str=`<div class="card">
@@ -387,7 +391,6 @@ getDatesBetween(start,end)
 	</div>`
 	checkRoom.innerHTML=str
 	}
-
     function final(params) {
 		const name=document.querySelector('#account').value
 		const phone=document.querySelector('#phone').value

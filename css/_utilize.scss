@@ -6,6 +6,10 @@
 .bg-cover:hover{
     transform: scale(1.1);
 }
+.bg-notran-cover{
+    background-size: cover;
+    background-position: center center;
+}
 .bg-top{
     background-size: cover;
     background-position: top center;
